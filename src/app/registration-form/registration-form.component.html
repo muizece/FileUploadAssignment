@@ -1,0 +1,44 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Name</label>
+      <input id="name" formControlName="name" />
+      <div *ngIf="registrationForm.get('name')?.invalid && (registrationForm.get('name')?.dirty || registrationForm.get('name')?.touched)">
+        <div *ngIf="registrationForm.get('name')?.errors?.['required']">Name is required.</div>
+        <div *ngIf="registrationForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</div>
+      </div>
+    </div>
+    
+    <div>
+      <label for="address">Address</label>
+      <input id="address" formControlName="address" />
+      <div *ngIf="registrationForm.get('address')?.invalid && (registrationForm.get('address')?.dirty || registrationForm.get('address')?.touched)">
+        <div *ngIf="registrationForm.get('address')?.errors?.['required']">Address is required.</div>
+      </div>
+    </div>
+    
+    <div formArrayName="files">
+      <div *ngFor="let file of files.controls; let i = index" [formGroupName]="i">
+        <div>
+          <label for="fileName">File Name</label>
+          <input id="fileName" formControlName="fileName" />
+          <div *ngIf="file.get('fileName')?.invalid && (file.get('fileName')?.dirty || file.get('fileName')?.touched)">
+            <div *ngIf="file.get('fileName')?.errors?.['required']">File Name is required.</div>
+          </div>
+        </div>
+        
+        <div>
+          <label for="file">File</label>
+          <input type="file" (change)="onFileChange($event, i)" />
+          <div *ngIf="file.get('file')?.invalid && (file.get('file')?.dirty || file.get('file')?.touched)">
+            <div *ngIf="file.get('file')?.errors?.['required']">File is required.</div>
+          </div>
+        </div>
+        
+        <button type="button" (click)="removeFile(i)">Remove File</button>
+      </div>
+    </div>
+    
+    <button type="button" (click)="addFile()">Add File</button>
+    <button type="submit" [disabled]="registrationForm.invalid">Submit</button>
+  </form>
+  
